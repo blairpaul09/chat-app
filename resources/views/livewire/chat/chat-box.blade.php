@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="p-2">
-                <div id="messages" wire:poll.1s class="flex flex-col gap-2 items-start p-2"
+                <div id="messages-container" wire:poll.1s class="flex flex-col gap-2 items-start p-2"
                     style="overflow: scroll;height:400px;margin-bottom:80px;overflow-x:hidden;">
                     @foreach ($messages->reverse() as $message)
                         @if (auth()->id() === $message->sender_id)
@@ -32,7 +32,7 @@
                             <textarea wire:model="message" wire:keydown.enter="sendChatChannelMessage"
                                 class="flex-grow h-12 px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-200 resize-none"
                                 placeholder="Type your message..."></textarea>
-                            <x-button class="h-12" @click="scrollDown">
+                            <x-button class="h-12" wire:click="sendChatChannelMessage">
                                 send
                             </x-button>
                         </div>
@@ -45,12 +45,13 @@
 
 @push('scripts')
     <script>
-        async function scrollDown() {
-            await @this.sendChatChannelMessage()
-            var el = document.getElementById('messages');
-            setTimeout(() => {
-                el.scrollTop = el.scrollHeight;
-            }, 500);
-        }
+        Livewire.on('scroll-down', () => {
+            const container = document.getElementById('messages-container');
+            if (container) {
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight;
+                }, 500);
+            }
+        });
     </script>
 @endpush

@@ -18,7 +18,7 @@ class ChatBox extends Component
 
     protected $listeners = ['setChatChannel', 'sendChatChannelMessage'];
 
-    public null|ChatChannel $channel;
+    public null|ChatChannel $channel = null;
 
     public string $message = '';
 
@@ -27,7 +27,7 @@ class ChatBox extends Component
     public function render()
     {
         $messages = ChatService::getMessages($this->channel, $this->perPage);
-
+        $this->dispatch('scroll-down');
         return view('livewire.chat.chat-box', [
             'messages' => $messages
         ]);
@@ -65,6 +65,8 @@ class ChatBox extends Component
         ChatService::sendMessage($this->channel, $this->message);
 
         $this->message = '';
+
+        $this->dispatch('scroll-down');
     }
 
 
