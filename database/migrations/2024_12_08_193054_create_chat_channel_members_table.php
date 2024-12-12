@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('chat_channel_members', function (Blueprint $table) {
             $table->id();
-            $table->string('chat_channel_id')->unsigned();
-            $table->bigInteger('user_id')->unsigned();   
+            $table->string('chat_channel_id');
+            $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
         });
     }

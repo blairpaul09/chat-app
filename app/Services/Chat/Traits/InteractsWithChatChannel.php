@@ -17,11 +17,12 @@ trait InteractsWithChatChannel
      */
     public static function getChannel(User $userOne, User $userTwo): ChatChannel
     {
-        $channel = ChatChannel::whereHas('members', function ($query) use ($userOne, $userTwo) {
-            $query->whereIn('user_id', [$userOne->id, $userTwo->id])
-                ->groupBy('chat_channel_id')
-                ->having(DB::raw('COUNT(DISTINCT user_id)'), 2);
-        })->first();
+        $channel = ChatChannel::join('chat_channel_members', 'chat_channel_members.chat_channel_id', 'chat_channels.id')
+            ->groupBy('chat_channels.id')
+            ->whereIn('chat_channel_members.user_id', [$userOne->id, $userTwo->id])
+            ->select('chat_channels.*', DB::raw('COUNT(DISTINCT chat_channel_members.user_id) as users_count'))
+            ->having('users_count', 2)
+            ->first();
 
         if (!$channel) {
             $channel = self::createChannel($userOne, $userTwo);
