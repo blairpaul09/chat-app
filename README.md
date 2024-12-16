@@ -1,3 +1,21 @@
+## Install packages and dependencies
+
+```
+composer install
+```
+
+## Install packages and dependencies for front end
+
+```
+npm install
+```
+
+## Build front end assets
+
+```
+npm run build
+```
+
 ## Setting up env
 
 Create a .env file and copy the contents of .env.example
